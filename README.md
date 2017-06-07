@@ -47,7 +47,7 @@ deepSetIn(obj, ['one', ['two', 'id', 999], 'val'], 'works')
 
 ### Arguments
 
-`deepSetIn(obj, path, value)`
+`deepSetIn(obj, path, value, options)`
 
 - `obj - Object`: The original object.
 - `path - Array`: The property path, array with keys.
