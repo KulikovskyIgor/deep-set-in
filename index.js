@@ -2,10 +2,12 @@ var cloneDeep = require('clone-deep');
 var kindOf = require('kind-of');
 
 /**
- * @param  {object} obj          The object.
- * @param  {string} path         The property path, array with keys.
- * @param  {*}      value        The new value.
- * @return {object}              The object with set value or undefined.
+ * @param  {object} obj                     The object.
+ * @param  {string} path                    The property path, array with keys.
+ * @param  {*}      value                   The new value.
+ * @param  {object} options                 The options object.
+ * @param  {boolean} options.immutable      Specify modify original object or return modified
+ * @return {object}                         The object with set value or undefined.
  */
 
 module.exports = function deepSetIn(obj, path, value, options) {
