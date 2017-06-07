@@ -41,6 +41,8 @@ function set(obj, path, value, options) {
 
   for (var i = 0; i < path.length; i++) {
 
+    manageCreateEntity(targetObj, path[i], options);
+
     if (kindOf(path[i]) === 'string') {
 
       if (!targetObj.hasOwnProperty(path[i])) return;
@@ -86,6 +88,37 @@ function findIndex(array, compareKey, compareValue) {
 function getRootObj(obj, options) {
   if (options && options.immutable) {
     return cloneDeep(obj);
+  } else {
+    return obj;
+  }
+}
+
+function manageCreateEntity(obj, key, options) {
+  if (options && options.create) {
+
+    if (kindOf(key) === 'string') {
+
+      if (!obj.hasOwnProperty(key)) {
+        obj[key] = {};
+      }
+    } else if (kindOf(key) === 'array') {
+      var targetKey = key[0];
+      var compareKey = key[1];
+      var compareValue = key[2];
+
+      if (!obj.hasOwnProperty(targetKey) || kindOf(obj[targetKey]) !== 'array') {
+        obj[targetKey] = [];
+      }
+
+      const foundIndex = findIndex(obj[targetKey], compareKey, compareValue);
+
+      if (kindOf(foundIndex) !== 'number') {
+        var computedObj = {};
+        computedObj[compareKey] = compareValue;
+        obj[targetKey].push(computedObj);
+      }
+    }
+
   } else {
     return obj;
   }

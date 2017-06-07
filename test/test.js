@@ -58,3 +58,47 @@ test('set nested array property', function (t) {
 
   t.equal(obj.a.b.c[1].k[0].val, 'test 5');
 });
+
+test('create new object', function (t) {
+  var obj = cloneDeep(testObj);
+  t.plan(2);
+  t.equal(obj.a.b.g, undefined);
+
+  var path = ['a', 'b', 'g'];
+  deepSetIn(obj, path, 'works', {create: true});
+
+  t.equal(obj.a.b.g, 'works');
+});
+
+test('create new deep nested object', function (t) {
+  var obj = cloneDeep(testObj);
+  t.plan(2);
+  t.equal(obj.a.b.g, undefined);
+
+  var path = ['a', 'b', 'g', 'h', 'j', 'k'];
+  deepSetIn(obj, path, 'works', {create: true});
+
+  t.equal(obj.a.b.g.h.j.k, 'works');
+});
+
+test('create new array', function (t) {
+  var obj = cloneDeep(testObj);
+  t.plan(2);
+  t.equal(obj.a.b.g, undefined);
+
+  var path = ['a', 'b', ['g', 'id', 'id value'], 'new-property'];
+  deepSetIn(obj, path, 'works', {create: true});
+
+  t.equal(obj.a.b.g[0]['new-property'], 'works');
+});
+
+test('create new deep nested array', function (t) {
+  var obj = cloneDeep(testObj);
+  t.plan(2);
+  t.equal(obj.a.b.g, undefined);
+
+  var path = ['a', 'b', ['g', 'id', 'id value'], ['h', 'id', 'id value'], 'new-property'];
+  deepSetIn(obj, path, 'works', {create: true});
+
+  t.equal(obj.a.b.g[0].h[0]['new-property'], 'works');
+});
