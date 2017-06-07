@@ -41,7 +41,7 @@ var comparator = function(a, b) {
   return a > b;
 };
 
-deepSetIn(obj, ['one', ['two', 'id', 999], 'val'], 'works')
+deepSetIn(obj, ['one', ['two', 'id', 999, comparator], 'val'], 'works')
 // { one: { two: [{ id: 1, val: 'works' }] } }
 ```
 

@@ -1,6 +1,6 @@
 {
   "name": "deep-set-in",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Sets the value at path of object and array tree",
   "main": "index.min.js",
   "scripts": {
