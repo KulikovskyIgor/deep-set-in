@@ -27,6 +27,7 @@
     "tape": "^4.6.3"
   },
   "dependencies": {
-    "clone-deep": "^0.3.0"
+    "clone-deep": "^0.3.0",
+    "kind-of": "^4.0.0"
   }
 }

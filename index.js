@@ -1,4 +1,5 @@
 var cloneDeep = require('clone-deep');
+var kindOf = require('kind-of');
 
 /**
  * @param  {object} obj          The object.
@@ -13,11 +14,11 @@ module.exports = function deepSetIn(obj, path, value, options) {
 };
 
 function validateAttrs(obj, path, value, options) {
-  if (typeof obj !== 'object') {
+  if (kindOf(obj) !== 'object') {
     throw new Error('First argument must be an object');
   }
 
-  if (!(path instanceof Array)) {
+  if (kindOf(path) !== 'array') {
     throw new Error('Second argument must be an array');
   } else if (!path.length) {
     throw new Error('Path must not be empty');
@@ -27,7 +28,7 @@ function validateAttrs(obj, path, value, options) {
     throw new Error('Value must be specified');
   }
 
-  if (options && typeof options !== 'object') {
+  if (options && kindOf(options) !== 'object') {
     throw new Error('Options must be an object');
   }
 }
@@ -38,7 +39,7 @@ function set(obj, path, value, options) {
 
   for (var i = 0; i < path.length; i++) {
 
-    if (typeof path[i] === 'string') {
+    if (kindOf(path[i]) === 'string') {
 
       if (!targetObj.hasOwnProperty(path[i])) return;
 
@@ -48,16 +49,16 @@ function set(obj, path, value, options) {
       } else {
         targetObj = targetObj[path[i]];
       }
-    } else if (path[i] instanceof Array) {
+    } else if (kindOf(path[i]) === 'array') {
       var key = path[i][0];
       var compareKey = path[i][1];
       var compareValue = path[i][2];
 
-      if (!targetObj.hasOwnProperty(key) || !targetObj[key] instanceof Array) return;
+      if (!targetObj.hasOwnProperty(key) || kindOf(targetObj[key]) !== 'array') return;
 
       const foundIndex = findIndex(targetObj[key], compareKey, compareValue);
 
-      if (typeof foundIndex !== 'number') return;
+      if (kindOf(foundIndex) !== 'number') return;
 
       if ((i + 1) === path.length) {
         targetObj[key][foundIndex] = value;
@@ -71,7 +72,7 @@ function set(obj, path, value, options) {
 
 function findIndex(array, compareKey, compareValue) {
   for (var i = 0; i < array.length; i++) {
-    if (typeof array[i] === 'object'
+    if (kindOf(array[i]) === 'object'
       && array[i].hasOwnProperty(compareKey)
       && array[i][compareKey] === compareValue
     ) {
