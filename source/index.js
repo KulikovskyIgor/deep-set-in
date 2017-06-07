@@ -31,7 +31,7 @@ function _validateAttrs(obj, path, value, options) {
     throw new Error('Value must be specified');
   }
 
-  if (options && kindOf(options) !== 'object') {
+  if (kindOf(options) !== 'undefined' && kindOf(options) !== 'object') {
     throw new Error('Options must be an object');
   }
 }
@@ -58,10 +58,11 @@ function _set(obj, path, value, options) {
       const key = path[i][0];
       const compareKey = path[i][1];
       const compareValue = path[i][2];
+      const compareFunc = path[i][3];
 
       if (!targetObj.hasOwnProperty(key) || kindOf(targetObj[key]) !== 'array') return;
 
-      const foundIndex = _findIndex(targetObj[key], compareKey, compareValue);
+      const foundIndex = _findIndex(targetObj[key], compareKey, compareValue, compareFunc);
 
       if (kindOf(foundIndex) !== 'number') return;
 
@@ -75,15 +76,28 @@ function _set(obj, path, value, options) {
   }
 }
 
-function _findIndex(array, compareKey, compareValue) {
+function _findIndex(array, compareKey, compareValue, compareFunc) {
+
+  if (kindOf(compareFunc) !== 'undefined' && kindOf(compareFunc) !== 'function') {
+    throw new Error('Comparator mast be a function');
+  }
+
   for (let i = 0; i < array.length; i++) {
     if (kindOf(array[i]) === 'object'
       && array[i].hasOwnProperty(compareKey)
-      && array[i][compareKey] === compareValue
     ) {
-      return i;
+      const value = array[i][compareKey];
+      const isEqual = compareFunc ? compareFunc(compareValue, value) : _isEqual(compareValue, value);
+
+      if (isEqual) {
+        return i;
+      }
     }
   }
+}
+
+function _isEqual(a, b) {
+  return a === b;
 }
 
 function _getRootObj(obj, options) {

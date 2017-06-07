@@ -102,3 +102,18 @@ test('create new deep nested array', function (t) {
 
   t.equal(obj.a.b.g[0].h[0]['new-property'], 'works');
 });
+
+test('set nested array property with custom comparator', function (t) {
+  var obj = cloneDeep(testObj);
+  t.plan(2);
+  t.equal(obj.a.b.c[1].k[0].val, 'test 3');
+
+  function comparator(our, their) {
+    return our > their;
+  }
+
+  var path = ['a', 'b', ['c', 'id', 2], ['k', 'id', 999, comparator], 'val'];
+  deepSetIn(obj, path, 'test 5');
+
+  t.equal(obj.a.b.c[1].k[0].val, 'test 5');
+});
