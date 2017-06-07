@@ -7,6 +7,7 @@ const kindOf = require('kind-of');
  * @param  {*}      value                   The new value.
  * @param  {object} options                 The options object.
  * @param  {boolean} options.immutable      Specify modify original object or return modified
+ * @param  {boolean} options.create         Specify creating of new an object or array if it is not exist
  * @return {object}                         The object with _set value or undefined.
  */
 
