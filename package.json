@@ -1,14 +1,17 @@
 {
   "name": "deep-set-in",
-  "version": "1.0.0",
-  "description": "Sets the value at path of object",
+  "version": "1.0.1",
+  "description": "Sets the value at path of object and array tree",
   "main": "index.js",
   "scripts": {
     "test": "tape test/*.js"
   },
   "repository": {
     "type": "git",
-    "url": "git repository"
+    "url": "https://github.com/KulikovskyIgor/deep-set-in"
+  },
+  "bugs": {
+    "url": "https://github.com/KulikovskyIgor/deep-set-in/issues"
   },
   "keywords": [
     "set-in",
