@@ -1,0 +1,26 @@
+{
+  "name": "deep-set-in",
+  "version": "1.0.0",
+  "description": "Sets the value at path of object",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git repository"
+  },
+  "keywords": [
+    "set-in",
+    "deep",
+    "deep-set-in",
+    "nested",
+    "object",
+    "property"
+  ],
+  "author": "kulikovsky93@gmail.com",
+  "license": "MIT",
+  "devDependencies": {
+    "tape": "^4.6.3"
+  }
+}
