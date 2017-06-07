@@ -1,7 +1,8 @@
+var cloneDeep = require('clone-deep');
 var deepSetIn = require('..');
 var test = require('tape');
 
-var obj = {
+var testObj = {
   a: {
     b: {
       c: [
@@ -18,6 +19,7 @@ var obj = {
 };
 
 test('do nothing if path is not correct', function (t) {
+  var obj = cloneDeep(testObj);
   t.plan(1);
 
   deepSetIn(obj, ['a', 'b', 'g'], 'test 4');
@@ -26,6 +28,7 @@ test('do nothing if path is not correct', function (t) {
 });
 
 test('set nested property', function (t) {
+  var obj = cloneDeep(testObj);
   t.plan(2);
   t.equal(obj.a.b.d, 'test');
 
@@ -34,7 +37,19 @@ test('set nested property', function (t) {
   t.equal(obj.a.b.d, 'test 4');
 });
 
+test('set nested property and return modified object (doesnt modify original object)', function (t) {
+  var obj = cloneDeep(testObj);
+  t.plan(3);
+  t.equal(obj.a.b.d, 'test');
+
+  var modifiedObj = deepSetIn(obj, ['a', 'b', 'd'], 'test 4', {immutable: true});
+
+  t.equal(obj.a.b.d, 'test');
+  t.equal(modifiedObj.a.b.d, 'test 4');
+});
+
 test('set nested array property', function (t) {
+  var obj = cloneDeep(testObj);
   t.plan(2);
   t.equal(obj.a.b.c[1].k[0].val, 'test 3');
 

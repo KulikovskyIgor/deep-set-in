@@ -1,6 +1,6 @@
 {
   "name": "deep-set-in",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Sets the value at path of object and array tree",
   "main": "index.js",
   "scripts": {
@@ -25,5 +25,8 @@
   "license": "MIT",
   "devDependencies": {
     "tape": "^4.6.3"
+  },
+  "dependencies": {
+    "clone-deep": "^0.3.0"
   }
 }

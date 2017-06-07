@@ -1,16 +1,18 @@
+var cloneDeep = require('clone-deep');
+
 /**
  * @param  {object} obj          The object.
  * @param  {string} path         The property path, array with keys.
  * @param  {*}      value        The new value.
- * @return {object}              The new object with set value or undefined.
+ * @return {object}              The object with set value or undefined.
  */
 
-module.exports = function deepSetIn(obj, path, value) {
+module.exports = function deepSetIn(obj, path, value, options) {
   validateAttrs.apply(this, arguments);
   return set.apply(this, arguments);
 };
 
-function validateAttrs(obj, path, value) {
+function validateAttrs(obj, path, value, options) {
   if (typeof obj !== 'object') {
     throw new Error('First argument must be an object');
   }
@@ -23,6 +25,47 @@ function validateAttrs(obj, path, value) {
 
   if (!value) {
     throw new Error('Value must be specified');
+  }
+
+  if (options && typeof options !== 'object') {
+    throw new Error('Options must be an object');
+  }
+}
+
+function set(obj, path, value, options) {
+  var rootObj = getRootObj(obj, options);
+  var targetObj = rootObj;
+
+  for (var i = 0; i < path.length; i++) {
+
+    if (typeof path[i] === 'string') {
+
+      if (!targetObj.hasOwnProperty(path[i])) return;
+
+      if ((i + 1) === path.length) {
+        targetObj[path[i]] = value;
+        return rootObj;
+      } else {
+        targetObj = targetObj[path[i]];
+      }
+    } else if (path[i] instanceof Array) {
+      var key = path[i][0];
+      var compareKey = path[i][1];
+      var compareValue = path[i][2];
+
+      if (!targetObj.hasOwnProperty(key) || !targetObj[key] instanceof Array) return;
+
+      const foundIndex = findIndex(targetObj[key], compareKey, compareValue);
+
+      if (typeof foundIndex !== 'number') return;
+
+      if ((i + 1) === path.length) {
+        targetObj[key][foundIndex] = value;
+        return rootObj;
+      } else {
+        targetObj = targetObj[key][foundIndex];
+      }
+    }
   }
 }
 
@@ -37,39 +80,10 @@ function findIndex(array, compareKey, compareValue) {
   }
 }
 
-function set(obj, path, value) {
-  var rootObj = obj;
-  var modifiedObj = rootObj;
-
-  for (var i = 0; i < path.length; i++) {
-
-    if (typeof path[i] === 'string') {
-
-      if (!modifiedObj.hasOwnProperty(path[i])) return;
-
-      if ((i + 1) === path.length) {
-        modifiedObj[path[i]] = value;
-        return rootObj;
-      } else {
-        modifiedObj = modifiedObj[path[i]];
-      }
-    } else if (path[i] instanceof Array) {
-      var key = path[i][0];
-      var compareKey = path[i][1];
-      var compareValue = path[i][2];
-
-      if (!modifiedObj.hasOwnProperty(key) || !modifiedObj[key] instanceof Array) return;
-
-      const foundIndex = findIndex(modifiedObj[key], compareKey, compareValue);
-
-      if (typeof foundIndex !== 'number') return;
-
-      if ((i + 1) === path.length) {
-        modifiedObj[key][foundIndex] = value;
-        return rootObj;
-      } else {
-        modifiedObj = modifiedObj[key][foundIndex];
-      }
-    }
+function getRootObj(obj, options) {
+  if (options && options.immutable) {
+    return cloneDeep(obj);
+  } else {
+    return obj;
   }
 }
