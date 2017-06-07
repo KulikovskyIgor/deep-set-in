@@ -1,5 +1,5 @@
 var cloneDeep = require('clone-deep');
-var deepSetIn = require('..');
+var deepSetIn = require('../source');
 var test = require('tape');
 
 var testObj = {

@@ -1,5 +1,5 @@
-var cloneDeep = require('clone-deep');
-var kindOf = require('kind-of');
+const cloneDeep = require('clone-deep');
+const kindOf = require('kind-of');
 
 /**
  * @param  {object} obj                     The object.
@@ -7,15 +7,15 @@ var kindOf = require('kind-of');
  * @param  {*}      value                   The new value.
  * @param  {object} options                 The options object.
  * @param  {boolean} options.immutable      Specify modify original object or return modified
- * @return {object}                         The object with set value or undefined.
+ * @return {object}                         The object with _set value or undefined.
  */
 
 module.exports = function deepSetIn(obj, path, value, options) {
-  validateAttrs.apply(this, arguments);
-  return set.apply(this, arguments);
+  _validateAttrs.call(this, obj, path, value, options);
+  return _set.call(this, obj, path, value, options);
 };
 
-function validateAttrs(obj, path, value, options) {
+function _validateAttrs(obj, path, value, options) {
   if (kindOf(obj) !== 'object') {
     throw new Error('First argument must be an object');
   }
@@ -35,13 +35,13 @@ function validateAttrs(obj, path, value, options) {
   }
 }
 
-function set(obj, path, value, options) {
-  var rootObj = getRootObj(obj, options);
-  var targetObj = rootObj;
+function _set(obj, path, value, options) {
+  let rootObj = _getRootObj(obj, options);
+  let targetObj = rootObj;
 
-  for (var i = 0; i < path.length; i++) {
+  for (let i = 0; i < path.length; i++) {
 
-    manageCreateEntity(targetObj, path[i], options);
+    _manageCreateEntity(targetObj, path[i], options);
 
     if (kindOf(path[i]) === 'string') {
 
@@ -54,13 +54,13 @@ function set(obj, path, value, options) {
         targetObj = targetObj[path[i]];
       }
     } else if (kindOf(path[i]) === 'array') {
-      var key = path[i][0];
-      var compareKey = path[i][1];
-      var compareValue = path[i][2];
+      const key = path[i][0];
+      const compareKey = path[i][1];
+      const compareValue = path[i][2];
 
       if (!targetObj.hasOwnProperty(key) || kindOf(targetObj[key]) !== 'array') return;
 
-      const foundIndex = findIndex(targetObj[key], compareKey, compareValue);
+      const foundIndex = _findIndex(targetObj[key], compareKey, compareValue);
 
       if (kindOf(foundIndex) !== 'number') return;
 
@@ -74,8 +74,8 @@ function set(obj, path, value, options) {
   }
 }
 
-function findIndex(array, compareKey, compareValue) {
-  for (var i = 0; i < array.length; i++) {
+function _findIndex(array, compareKey, compareValue) {
+  for (let i = 0; i < array.length; i++) {
     if (kindOf(array[i]) === 'object'
       && array[i].hasOwnProperty(compareKey)
       && array[i][compareKey] === compareValue
@@ -85,7 +85,7 @@ function findIndex(array, compareKey, compareValue) {
   }
 }
 
-function getRootObj(obj, options) {
+function _getRootObj(obj, options) {
   if (options && options.immutable) {
     return cloneDeep(obj);
   } else {
@@ -93,7 +93,7 @@ function getRootObj(obj, options) {
   }
 }
 
-function manageCreateEntity(obj, key, options) {
+function _manageCreateEntity(obj, key, options) {
   if (options && options.create) {
 
     if (kindOf(key) === 'string') {
@@ -102,23 +102,20 @@ function manageCreateEntity(obj, key, options) {
         obj[key] = {};
       }
     } else if (kindOf(key) === 'array') {
-      var targetKey = key[0];
-      var compareKey = key[1];
-      var compareValue = key[2];
+      const targetKey = key[0];
+      const compareKey = key[1];
+      const compareValue = key[2];
 
       if (!obj.hasOwnProperty(targetKey) || kindOf(obj[targetKey]) !== 'array') {
         obj[targetKey] = [];
       }
 
-      const foundIndex = findIndex(obj[targetKey], compareKey, compareValue);
+      const foundIndex = _findIndex(obj[targetKey], compareKey, compareValue);
 
       if (kindOf(foundIndex) !== 'number') {
-        var computedObj = {};
-        computedObj[compareKey] = compareValue;
-        obj[targetKey].push(computedObj);
+        obj[targetKey].push({[compareKey]: compareValue});
       }
     }
-
   } else {
     return obj;
   }
