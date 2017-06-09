@@ -1,4 +1,4 @@
-const cloneDeep = require('clone-deep');
+const cloneDeep = require('lodash.clonedeep');
 const kindOf = require('kind-of');
 
 /**

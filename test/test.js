@@ -1,4 +1,4 @@
-var cloneDeep = require('clone-deep');
+var cloneDeep = require('lodash.clonedeep');
 var deepSetIn = require('../source');
 var test = require('tape');
 
